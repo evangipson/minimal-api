@@ -6,7 +6,12 @@ pub mod server {
 }
 
 pub mod http {
+    pub mod constants;
+    pub mod methods;
+    pub mod request;
+    pub mod respond;
     pub mod response;
+    pub mod status;
 }
 
 pub mod time {

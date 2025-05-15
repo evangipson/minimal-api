@@ -1,30 +1,12 @@
-use crate::time::date::Date;
+use crate::{
+    http::{
+        constants::{CONTENT_JSON, CONTENT_LENGTH, CONTENT_TYPE, HTTP_VERSION},
+        respond::Respond,
+        status::Status,
+    },
+    time::date::Date,
+};
 use std::collections::HashMap;
-
-const HTTP_VERSION: &str = "HTTP/1.1";
-const CONTENT_LENGTH: &str = "Content-Length";
-const CONTENT_TYPE: &str = "Content-Type";
-const CONTENT_JSON: &str = "application/json";
-
-pub enum Status {
-    OK,
-    NOTFOUND,
-}
-
-impl Status {
-    pub const OK: Status = Status::OK;
-    pub const NOTFOUND: Status = Status::NOTFOUND;
-}
-
-impl std::fmt::Display for Status {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let status = match self {
-            Status::OK => "200 OK",
-            Status::NOTFOUND => "404 NOT FOUND",
-        };
-        write!(f, "{status}")
-    }
-}
 
 pub struct Response {
     pub content: String,
@@ -90,27 +72,5 @@ impl Response {
 
     pub fn is_empty(&self) -> bool {
         self.respond().len() == 0
-    }
-}
-
-pub trait Respond {
-    fn get_json(&self) -> String;
-}
-
-impl Respond for String {
-    fn get_json(&self) -> String {
-        "\"".to_string() + self + "\""
-    }
-}
-
-impl<T: std::string::ToString, U: std::string::ToString> Respond for HashMap<T, U> {
-    fn get_json(&self) -> String {
-        "{".to_owned()
-            + self
-                .iter()
-                .map(|(t, u)| "\"".to_string() + &t.to_string() + "\":\"" + &u.to_string() + "\", ")
-                .collect::<String>()
-                .trim_end_matches(",")
-            + "}"
     }
 }
