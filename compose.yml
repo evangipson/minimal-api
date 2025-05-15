@@ -1,0 +1,9 @@
+name: 'minimal-api'
+
+services:
+  server:
+    build: .
+    container_name: 'server'
+    stop_grace_period: 1s
+    ports:
+      - 8080:80

@@ -12,3 +12,8 @@ pub mod http {
 pub mod time {
     pub mod date;
 }
+
+pub mod environment {
+    pub mod app;
+    pub mod server;
+}

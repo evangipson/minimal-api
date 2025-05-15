@@ -1,6 +1,6 @@
 [package]
-name = "product-api"
-version = "0.1.0"
+name = "minimal-api"
+version = "0.0.1"
 edition = "2024"
 
 [dependencies]
