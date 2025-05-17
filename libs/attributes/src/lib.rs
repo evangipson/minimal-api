@@ -11,11 +11,11 @@ fn extract_return_type(a: ReturnType) -> Box<Type> {
 
 #[doc = r#"
     # http_get
-    The [`#[http_get]`](http_get) attribute modifies the function that uses it inline
+    The [`http_get`](macro@http_get) attribute modifies the function that uses it inline
     to return a [`Route`](http::route), as long as the function returns a [`String`].
 
     # example
-    [`#[http_get]`](http_get) can be used to hook up a [`String`] as a [`Route`](http::route).
+    [`http_get`](macro@http_get) can be used to hook up a [`String`] as a [`Route`](http::route).
     
     The following function:
     ```rust
