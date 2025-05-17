@@ -3,9 +3,9 @@ use crate::{
         app::{CRATE_NAME, CRATE_VERSION},
         server::ServerConfig,
     },
-    http::{request::Request, response::Response},
     server::thread_pool::ThreadPool,
 };
+use http::response::Response;
 use std::{
     collections::HashMap,
     io::{BufReader, prelude::*},
@@ -14,19 +14,13 @@ use std::{
 };
 
 // use OnceLock to only initialize the static collection of endpoints once in a thread-safe manner
-static ENDPOINTS: OnceLock<HashMap<String, String>> = OnceLock::new();
-fn get_endpoints() -> &'static HashMap<String, String> {
+static ENDPOINTS: OnceLock<HashMap<String, Response>> = OnceLock::new();
+fn get_endpoints() -> &'static HashMap<String, Response> {
     ENDPOINTS.get_or_init(|| {
-        [
-            (
-                Request::get("/"),
-                Response::ok(&format!("Hello from {} v{}!", CRATE_NAME, CRATE_VERSION)),
-            ),
-            (Request::get("/name"), Response::ok(CRATE_NAME)),
-            (Request::get("/version"), Response::ok(CRATE_VERSION)),
-        ]
-        .into_iter()
-        .collect()
+        crate::routes::index::get_endpoints()
+            .into_iter()
+            .map(|r| (r.request.to_string(), r.get_primary_route()))
+            .collect()
     })
 }
 
@@ -48,15 +42,17 @@ pub fn listen() {
     println!("Shutting down.");
 }
 
-fn handle_connection(mut stream: TcpStream, endpoints: &HashMap<String, String>) {
+fn handle_connection(mut stream: TcpStream, endpoints: &HashMap<String, Response>) {
     let buf_reader = BufReader::new(&stream);
     if let Some(Ok(request_line)) = buf_reader.lines().next() {
         let response = match endpoints.get(&request_line) {
-            Some(content) => content.clone(),
-            None => Response::not_found(),
+            Some(content) => content,
+            None => &Response::not_found(),
         };
-        stream.write_all(response.as_bytes()).unwrap();
+        stream.write_all(response.to_string().as_bytes()).unwrap();
     } else {
-        stream.write_all(Response::not_found().as_bytes()).unwrap();
+        stream
+            .write_all(Response::not_found().to_string().as_bytes())
+            .unwrap();
     }
 }

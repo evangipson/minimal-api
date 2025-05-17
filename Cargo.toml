@@ -2,5 +2,15 @@
 name = "minimal-api"
 version = "0.0.1"
 edition = "2024"
+authors = ["Evan Gipson"]
 
-[dependencies]
+[workspace]
+
+[dependencies.time]
+path = "libs/time"
+
+[dependencies.http]
+path = "libs/http"
+
+[dependencies.attributes]
+path = "libs/attributes"
