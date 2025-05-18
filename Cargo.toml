@@ -4,13 +4,6 @@ version = "0.0.1"
 edition = "2024"
 authors = ["Evan Gipson"]
 
-[workspace]
-
-[dependencies.time]
-path = "libs/time"
-
-[dependencies.http]
-path = "libs/http"
-
-[dependencies.attributes]
-path = "libs/attributes"
+[dependencies]
+http = { path = "libs/http" }
+attributes = { path = "libs/attributes" }

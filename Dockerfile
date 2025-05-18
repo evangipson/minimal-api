@@ -3,11 +3,15 @@ FROM rust:1.86-alpine AS builder
 
 # Copy over the source code
 WORKDIR /usr/src/minimal-api
+COPY libs ./libs
 COPY src ./src
 COPY Cargo.toml .
 
 # Copy over the environment config
 COPY .cargo/config.docker.toml ./.cargo/config.toml
+
+# Get the lib linking dependency prerequistes
+RUN apk add musl-dev
 
 # Build the rust application
 RUN cargo install --path .
