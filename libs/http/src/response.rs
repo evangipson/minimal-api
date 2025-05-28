@@ -1,6 +1,5 @@
 use crate::{
     constants::{CONTENT_JSON, CONTENT_LENGTH, CONTENT_TYPE, HTTP_VERSION},
-    respond::Respond,
     status::Status,
 };
 use time::date::Date;
@@ -36,7 +35,7 @@ impl Response {
 
     fn new(status: Status, contents: &str) -> Self {
         Response {
-            content: contents.to_string().get_json(),
+            content: contents.to_string(),
             status,
             time: Date::new(),
             header: String::new(),
@@ -52,8 +51,9 @@ impl Response {
     //         content: content.get_json(),
     //         status,
     //         time: Date::new(),
-    //         header: Self::add_http_headers(),
+    //         header: String::new(),
     //     }
+    //     .add_http_headers()
     // }
 
     fn add_http_headers(mut self) -> Self {

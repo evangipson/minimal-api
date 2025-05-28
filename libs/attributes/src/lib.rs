@@ -40,7 +40,6 @@ pub fn http_get(attr: TokenStream, item: TokenStream) -> TokenStream {
     let fn_name = &input_fn.sig.ident;
     let fn_body = &input_fn.block.stmts.last();
     let fn_return_type = &input_fn.sig.output;
-    let route_return_type = quote! {http::route::Route};
     let binding = attr.to_string();
     let path_string = binding.trim_matches('"');
     let route_get = quote! {http::route::Route::get(#path_string, #fn_body)};
@@ -48,7 +47,7 @@ pub fn http_get(attr: TokenStream, item: TokenStream) -> TokenStream {
     extract_return_type(fn_return_type.clone());
 
     let expanded = quote! {
-        pub fn #fn_name() -> #route_return_type {
+        pub fn #fn_name() -> http::route::Route {
             #route_get
         }
     };
