@@ -1,7 +1,9 @@
-use crate::environment::app::{CRATE_NAME, CRATE_VERSION};
+use crate::{
+    environment::app::{CRATE_NAME, CRATE_VERSION},
+    routes,
+};
 use attributes::http_get;
 use http::{respond::Respond, route::Route};
-use std::collections::HashMap;
 
 #[http_get("/")]
 pub fn show_welcome_message() -> String {
@@ -18,9 +20,10 @@ pub fn show_crate_version() -> String {
     CRATE_VERSION.get_json()
 }
 
-#[http_get("/complex")]
-pub fn show_complex_object() -> String {
-    HashMap::from([("session_id", "13513ijgf")]).get_json()
+#[http_get("/squared")]
+pub fn show_number_squared(number: i32) -> String {
+    let squared_number = number * number;
+    squared_number.to_string().get_json()
 }
 
 pub fn get_endpoints() -> Vec<Route> {
@@ -28,6 +31,7 @@ pub fn get_endpoints() -> Vec<Route> {
         show_welcome_message(),
         show_crate_name(),
         show_crate_version(),
-        show_complex_object(),
+        show_number_squared(),
+        routes::mock::session::create_new_session_id(),
     ]
 }

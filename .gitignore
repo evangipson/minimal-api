@@ -1,1 +1,7 @@
+# Any compiled files
 /target
+**/target
+
+# Cargo.lock files
+Cargo.lock
+**/Cargo.lock
