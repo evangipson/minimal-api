@@ -15,9 +15,9 @@ pub struct Response {
     pub header: String,
     /// [`Response::content`] is the content returned by a response.
     pub content: String,
-    /// [`Response::status`] is the HTTP status of the response.
+    /// [`Response::status`] is the HTTP status of a response.
     /// # Example values
-    /// - [`Status::OK`]
+    /// - [`Status::Ok`]
     /// - [`Status::NotFound`]
     pub status: Status,
     /// [`Response::time`] is a timestamp of when a response is served.
