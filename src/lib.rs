@@ -31,7 +31,7 @@
 //! use http::route::Route;
 //!
 //! #[http_get("/who")]
-//! pub fn say_hello(name: &str) -> String {
+//! pub fn say_hello(name: String) -> String {
 //!     format!("Hello, {name}!")
 //! }
 //! ```

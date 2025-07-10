@@ -146,7 +146,7 @@ impl Request {
     /// use http::request::Request;
     ///
     /// fn get_body_from_request(request: Request) -> String {
-    ///     if let Some(body_content) = request.body_as_string {
+    ///     if let Ok(body_content) = request.body_as_string() {
     ///         body_content
     ///     } else {
     ///         String::new()
