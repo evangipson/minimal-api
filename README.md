@@ -12,6 +12,12 @@ Minimal API is planned to support:
 - `PUT` HTTP requests
 - `DELETE` HTTP requests
 
+## TODO:
+- [ ] Rename the attributes library to http_attributes
+- [ ] Guard query string parameter (and body content) input casting with some sort of validation in the attributes library
+- [ ] Introduce dynamic routes, e.g.: /get/person/{id}
+- [ ] Write unit tests for core functionality
+
 ## Getting Started
 1. Download the repo
 1. Navigate to the repo root

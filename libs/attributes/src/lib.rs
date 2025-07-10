@@ -18,7 +18,7 @@ const REQUEST_TYPE_PLACEHOLDER: &str = "http::request::Request";
 const GET_METHOD: &str = "GET";
 const POST_METHOD: &str = "POST";
 
-/// `validate_return_type` generates a custom error message for the macros.
+/// [`validate_return_type`] generates a custom error message for the macros.
 fn validate_return_type(item_fn: &ItemFn, method: &str) -> Result<(), TokenStream> {
     let original_return_type = match &item_fn.sig.output {
         ReturnType::Type(_, ty) => ty,
@@ -114,6 +114,7 @@ fn transform_function_to_route_handler(
                     });
                     had_body_arg = true;
                 } else {
+                    // TODO: fix wrong query string parameter type (i.e.: /squared?number=AAA will crash the server)
                     extracted_args.extend(quote! {
                         let #pat: #ty = req.query_param(stringify!(#pat))
                             .and_then(|s| s.parse().ok())

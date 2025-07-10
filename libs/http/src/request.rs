@@ -137,4 +137,25 @@ impl Request {
         // if there was a query string, but there was no matching value, return None
         None
     }
+
+    /// [`Request::body_as_string`] will return a [`String`] representation
+    /// of [`Request::body_content`].
+    /// # Example
+    /// [`Request::body_as_string`] can be used to get [`Request::body_content`]:
+    /// ```rust
+    /// use http::request::Request;
+    ///
+    /// fn get_body_from_request(request: Request) -> String {
+    ///     if let Some(body_content) = request.body_as_string {
+    ///         body_content
+    ///     } else {
+    ///         String::new()
+    ///     }
+    /// }
+    /// ```
+    pub fn body_as_string(&self) -> Result<String, String> {
+        self.body_content
+            .clone()
+            .ok_or_else(|| "Request body not available".to_string())
+    }
 }
