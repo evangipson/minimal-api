@@ -2,7 +2,7 @@ use crate::{
     environment::app::{CRATE_NAME, CRATE_VERSION},
     routes,
 };
-use attributes::{http_get, http_post};
+use attributes::{http_delete, http_get, http_post, http_put};
 use http::{respond::Respond, route::Route};
 
 #[http_get("/")]
@@ -23,12 +23,22 @@ pub fn show_crate_version() -> String {
 #[http_get("/squared")]
 pub fn show_number_squared(number: i32) -> String {
     let squared_number = number * number;
-    squared_number.to_string().get_json()
+    format!("{number} squared is {squared_number}.").get_json()
 }
 
 #[http_post("/sendname")]
 pub fn get_name(name: String) -> String {
-    name.to_string().get_json()
+    format!("Received name '{name}' from POST route!").get_json()
+}
+
+#[http_put("/update")]
+pub fn get_update_id(id: String) -> String {
+    format!("Received id '{id}' from PUT route!").get_json()
+}
+
+#[http_delete("/remove")]
+pub fn get_delete_id(id: String) -> String {
+    format!("Received id '{id}' from DELETE route!").get_json()
 }
 
 pub fn get_endpoints() -> Vec<Route> {
@@ -38,6 +48,8 @@ pub fn get_endpoints() -> Vec<Route> {
         show_crate_version(),
         show_number_squared(),
         get_name(),
+        get_update_id(),
+        get_delete_id(),
         routes::mock::session::create_new_session_id(),
     ]
 }

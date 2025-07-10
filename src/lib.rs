@@ -8,10 +8,10 @@
 //! - [`http`] for basic HTTP communication abstractions
 //! - [`attributes`] for helpful attribute macros, such as
 //!   [`http_get`](macro@attributes::http_get) and
-//!   [`http_post`](macro@attributes::http_post), to facilitate creating routes.
+//!   [`http_post`](macro@attributes::http_post), to facilitate creating
+//!   routes.
 //!
-//!
-//! # Setting up Endpoints
+//! # Creating routes
 //! The following example sets up an endpoint at the index route (`/`) that
 //! returns "Hello!":
 //! ```rust
@@ -36,14 +36,37 @@
 //! }
 //! ```
 //!
-//! The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST`ed data:
+//! The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST` data:
 //! ```rust
 //! use attributes::http_post;
 //! use http::route::Route;
 //!
 //! #[http_post("/submit")]
 //! pub fn get_post_data(content: String) -> String {
-//!     format!("POSTed {content}")
+//!     format!("Received '{content}' from POST")
+//! }
+//! ```
+//!
+//! The following example sets up a `PUT` endpoint for the `/update` path that returns the `PUT` data:
+//! ```rust
+//! use attributes::http_put;
+//! use http::route::Route;
+//!
+//! #[http_put("/update")]
+//! pub fn get_put_data(content: String) -> String {
+//!     format!("Received '{content}' from PUT")
+//! }
+//! ```
+//!
+//! The following example sets up a `DELETE` endpoint for the `/remove` path that returns a query
+//! parameter value sent to the `DELETE` route:
+//! ```rust
+//! use attributes::http_delete;
+//! use http::route::Route;
+//!
+//! #[http_delete("/remove")]
+//! pub fn get_delete_id(id: String) -> String {
+//!     format!("Received '{id}' from DELETE")
 //! }
 //! ```
 

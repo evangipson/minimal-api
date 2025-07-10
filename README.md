@@ -2,15 +2,10 @@
 A thread-safe minimal API written in rust that serves JSON for HTTP requests.
 
 Minimal API currently supports:
-- `GET` HTTP requests
-- `POST` HTTP requests
 - Thread-safe workers to listen for requests, and serve out responses
-- Query strings as parameters to functions
+- `GET`, `POST`, `PUT`, and `DELETE` HTTP requests
+- Query string keys and body content as function parameters
 - [A series of more complex routes](src/routes/mock/) to represent more realistic, complex scenarios
-
-Minimal API is planned to support:
-- `PUT` HTTP requests
-- `DELETE` HTTP requests
 
 ## TODO:
 - [ ] Rename the attributes library to http_attributes
@@ -28,7 +23,7 @@ Minimal API is planned to support:
     - Check the [server config file](.cargo/) of the environment you chose for the address
     - By default, there are index ("/"), "/name", and "/version" endpoints
 
-## Basic Endpoints
+## Example routes
 The following example sets up a `GET` endpoint for the index route (`/`) that returns "Hello!":
 ```rust
 use attributes::http_get;
@@ -51,14 +46,36 @@ pub fn say_hello(name: String) -> String {
 }
 ```
 
-The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST`ed data:
+The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST` data:
 ```rust
 use attributes::http_post;
 use http::route::Route;
 
 #[http_post("/submit")]
 pub fn get_post_data(content: String) -> String {
-    format!("POSTed {content}")
+    format!("Received '{content}' from POST")
+}
+```
+
+The following example sets up a `PUT` endpoint for the `/update` path that returns the `PUT` data:
+```rust
+use attributes::http_put;
+use http::route::Route;
+
+#[http_put("/update")]
+pub fn get_put_data(content: String) -> String {
+    format!("Received '{content}' from PUT")
+}
+```
+
+The following example sets up a `DELETE` endpoint for the `/remove` path that returns a query parameter value sent to the `DELETE` route:
+```rust
+use attributes::http_delete;
+use http::route::Route;
+
+#[http_delete("/remove")]
+pub fn get_delete_id(id: String) -> String {
+    format!("Received '{id}' from DELETE")
 }
 ```
 
@@ -66,7 +83,7 @@ pub fn get_post_data(content: String) -> String {
 1. Create a file in the [routes definition folder](./src/routes)
 1. Write a function that returns a `String`
 1. Add any [HTTP macro attribute](libs/attributes/src/lib.rs) to the function
-1. Optionally, add any parameters to represent query strings or `POST` data
+1. Optionally, add any parameters to represent query strings or body data
 1. Add the function to the vector returned by [`get_endpoints()` in the routes definition file](./src/routes/index.rs), without providing any parameters if they were added
 1. The [server listen() function](./src/server/listener.rs) will automatically pick up the new endpoint
 
