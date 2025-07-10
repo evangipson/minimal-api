@@ -29,7 +29,7 @@ Minimal API is planned to support:
     - By default, there are index ("/"), "/name", and "/version" endpoints
 
 ## Basic Endpoints
-The following example sets up an endpoint at the index route ("/") that returns "Hello!":
+The following example sets up a `GET` endpoint for the index route (`/`) that returns "Hello!":
 ```rust
 use attributes::http_get;
 use http::route::Route;
@@ -40,14 +40,25 @@ pub fn say_hello() -> String {
 }
 ```
 
-The following example sets up an endpoint at the "/who" endpoint that returns a message with the value of the `name` query parameter:
+The following example sets up a `GET` endpoint for the `/who` path that returns a message with the value of the `name` query parameter:
 ```rust
 use attributes::http_get;
 use http::route::Route;
 
 #[http_get("/who")]
-pub fn say_hello(name: &str) -> String {
+pub fn say_hello(name: String) -> String {
     format!("Hello, {name}!")
+}
+```
+
+The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST`ed data:
+```rust
+use attributes::http_post;
+use http::route::Route;
+
+#[http_post("/submit")]
+pub fn get_post_data(content: String) -> String {
+    format!("POSTed {content}")
 }
 ```
 

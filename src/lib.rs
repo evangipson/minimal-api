@@ -35,6 +35,17 @@
 //!     format!("Hello, {name}!")
 //! }
 //! ```
+//!
+//! The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST`ed data:
+//! ```rust
+//! use attributes::http_post;
+//! use http::route::Route;
+//!
+//! #[http_post("/submit")]
+//! pub fn get_post_data(content: String) -> String {
+//!     format!("POSTed {content}")
+//! }
+//! ```
 
 /// [`server`] contains all functionality related to handling client requests
 /// and serving responses safely.
