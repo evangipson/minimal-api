@@ -6,16 +6,16 @@
 //! It contains no dependencies besides a couple libraries that are included
 //! with it:
 //! - [`http`] for basic HTTP communication abstractions
-//! - [`attributes`] for helpful attribute macros, such as
-//!   [`http_get`](macro@attributes::http_get) and
-//!   [`http_post`](macro@attributes::http_post), to facilitate creating
+//! - [`http_attributes`] for helpful attribute macros, such as
+//!   [`http_get`](macro@http_attributes::http_get) and
+//!   [`http_post`](macro@http_attributes::http_post), to facilitate creating
 //!   routes.
 //!
 //! # Creating routes
 //! The following example sets up an endpoint at the index route (`/`) that
 //! returns "Hello!":
 //! ```rust
-//! use attributes::http_get;
+//! use http_attributes::http_get;
 //! use http::route::Route;
 //!
 //! #[http_get("/")]
@@ -27,7 +27,7 @@
 //! The following example sets up an endpoint at the `/who` endpoint that returns
 //! a message with the value of the `name` query parameter:
 //! ```rust
-//! use attributes::http_get;
+//! use http_attributes::http_get;
 //! use http::route::Route;
 //!
 //! #[http_get("/who")]
@@ -38,7 +38,7 @@
 //!
 //! The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST` data:
 //! ```rust
-//! use attributes::http_post;
+//! use http_attributes::http_post;
 //! use http::route::Route;
 //!
 //! #[http_post("/submit")]
@@ -49,7 +49,7 @@
 //!
 //! The following example sets up a `PUT` endpoint for the `/update` path that returns the `PUT` data:
 //! ```rust
-//! use attributes::http_put;
+//! use http_attributes::http_put;
 //! use http::route::Route;
 //!
 //! #[http_put("/update")]
@@ -61,7 +61,7 @@
 //! The following example sets up a `DELETE` endpoint for the `/remove` path that returns a query
 //! parameter value sent to the `DELETE` route:
 //! ```rust
-//! use attributes::http_delete;
+//! use http_attributes::http_delete;
 //! use http::route::Route;
 //!
 //! #[http_delete("/remove")]

@@ -6,4 +6,4 @@ authors = ["Evan Gipson"]
 
 [dependencies]
 http = { path = "libs/http" }
-attributes = { path = "libs/attributes" }
+http_attributes = { path = "libs/http_attributes" }

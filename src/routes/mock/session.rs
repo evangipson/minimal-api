@@ -1,6 +1,6 @@
 use crate::routes::mock::base_response::BaseMockResponse;
-use attributes::http_raw_get;
 use http::respond::Respond;
+use http_attributes::http_raw_get;
 use std::collections::HashMap;
 
 #[http_raw_get("/Services/Session/GenerateSessionId")]

@@ -2,8 +2,8 @@ use crate::{
     environment::app::{CRATE_NAME, CRATE_VERSION},
     routes,
 };
-use attributes::{http_delete, http_get, http_post, http_put};
 use http::{respond::Respond, route::Route};
+use http_attributes::{http_delete, http_get, http_post, http_put};
 
 #[http_get("/")]
 pub fn show_welcome_message() -> String {

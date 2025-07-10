@@ -8,7 +8,6 @@ Minimal API currently supports:
 - [A series of more complex routes](src/routes/mock/) to represent more realistic, complex scenarios
 
 ## TODO:
-- [ ] Rename the attributes library to http_attributes
 - [ ] Guard query string parameter (and body content) input casting with some sort of validation in the attributes library
 - [ ] Introduce dynamic routes, e.g.: /get/person/{id}
 - [ ] Write unit tests for core functionality
@@ -26,7 +25,7 @@ Minimal API currently supports:
 ## Example routes
 The following example sets up a `GET` endpoint for the index route (`/`) that returns "Hello!":
 ```rust
-use attributes::http_get;
+use http_attributes::http_get;
 use http::route::Route;
 
 #[http_get("/")]
@@ -37,7 +36,7 @@ pub fn say_hello() -> String {
 
 The following example sets up a `GET` endpoint for the `/who` path that returns a message with the value of the `name` query parameter:
 ```rust
-use attributes::http_get;
+use http_attributes::http_get;
 use http::route::Route;
 
 #[http_get("/who")]
@@ -48,7 +47,7 @@ pub fn say_hello(name: String) -> String {
 
 The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST` data:
 ```rust
-use attributes::http_post;
+use http_attributes::http_post;
 use http::route::Route;
 
 #[http_post("/submit")]
@@ -59,7 +58,7 @@ pub fn get_post_data(content: String) -> String {
 
 The following example sets up a `PUT` endpoint for the `/update` path that returns the `PUT` data:
 ```rust
-use attributes::http_put;
+use http_attributes::http_put;
 use http::route::Route;
 
 #[http_put("/update")]
@@ -70,7 +69,7 @@ pub fn get_put_data(content: String) -> String {
 
 The following example sets up a `DELETE` endpoint for the `/remove` path that returns a query parameter value sent to the `DELETE` route:
 ```rust
-use attributes::http_delete;
+use http_attributes::http_delete;
 use http::route::Route;
 
 #[http_delete("/remove")]

@@ -3,7 +3,14 @@
 version = 4
 
 [[package]]
-name = "attributes"
+name = "http"
+version = "0.0.1"
+dependencies = [
+ "time",
+]
+
+[[package]]
+name = "http_attributes"
 version = "0.0.1"
 dependencies = [
  "http",
@@ -13,18 +20,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "http"
-version = "0.0.1"
-dependencies = [
- "time",
-]
-
-[[package]]
 name = "minimal-api"
 version = "0.0.1"
 dependencies = [
- "attributes",
  "http",
+ "http_attributes",
 ]
 
 [[package]]
