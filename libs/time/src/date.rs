@@ -1,7 +1,7 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// [`Date`] represents a human-readable interpretation of [`std::time::SystemTime`].
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Date {
     /// [`Date::timestamp`] holds the amount of seconds elapsed since [`std::time::UNIX_EPOCH`].
     pub timestamp: u64,

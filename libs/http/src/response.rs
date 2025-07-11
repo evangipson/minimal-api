@@ -6,7 +6,7 @@ use std::{io::Write, net::TcpStream};
 use time::date::Date;
 
 /// [`Response`] represents a response to a web request.
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Response {
     /// [`Response::header`] is the HTTP header of a response.
     /// # Example values
