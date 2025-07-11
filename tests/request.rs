@@ -87,3 +87,24 @@ fn query_param_should_return_value_with_valid_query() {
     assert!(result.is_some());
     assert_eq!(expected, result.unwrap());
 }
+
+#[test]
+fn body_as_string_should_error_without_request_body() {
+    let request = Request::new("", "");
+
+    let result = request.body_as_string();
+
+    assert!(result.is_err());
+}
+
+#[test]
+fn body_as_string_should_return_body_content_with_request_body() {
+    let expected = "body content";
+    let mut request = Request::new("", "");
+    request.body_content = Some(expected.to_string());
+
+    let result = request.body_as_string();
+
+    assert!(result.is_ok());
+    assert_eq!(expected, result.unwrap());
+}

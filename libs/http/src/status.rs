@@ -1,5 +1,5 @@
 /// [`Status`] represents an HTTP response message status code.
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Status {
     /// [`Status::Ok`] represents a `200 OK` HTTP response status code.
     Ok,
