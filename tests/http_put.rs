@@ -1,5 +1,6 @@
 use http::{request::Request, response::Response};
 use http_attributes::{http_put, http_raw_put};
+use std::collections::HashMap;
 
 // ==================
 // common test values
@@ -31,8 +32,12 @@ fn http_put_request_pattern_should_return_expected_endpoint() {
 #[test]
 fn http_put_handler_should_return_expected_request() {
     let expected = Response::ok(TEST_PUT_BODY_CONTENT, false);
-    let mut request = Request::new(TEST_PUT_ENDPOINT, http::methods::PUT);
-    request.body_content = Some(TEST_PUT_BODY_CONTENT.to_string());
+    let request = Request::new(
+        TEST_PUT_ENDPOINT,
+        http::methods::PUT,
+        Some(TEST_PUT_BODY_CONTENT.to_string()),
+        HashMap::new(),
+    );
 
     let result = (test_put().handler)(request);
 
@@ -50,8 +55,12 @@ fn http_raw_put_request_pattern_should_return_expected_endpoint() {
 #[test]
 fn http_raw_put_handler_should_return_expected_raw_response() {
     let expected = Response::ok(TEST_PUT_BODY_CONTENT, true);
-    let mut request = Request::new(TEST_PUT_ENDPOINT, http::methods::PUT);
-    request.body_content = Some(TEST_PUT_BODY_CONTENT.to_string());
+    let request = Request::new(
+        TEST_PUT_ENDPOINT,
+        http::methods::PUT,
+        Some(TEST_PUT_BODY_CONTENT.to_string()),
+        HashMap::new(),
+    );
 
     let result = (test_raw_put().handler)(request);
 

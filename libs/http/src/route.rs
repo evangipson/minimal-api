@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{
     methods::{DELETE, GET, POST, PUT},
     request::Request,
@@ -126,6 +128,48 @@ impl Route {
     /// ```
     pub fn delete(path: &str, handler: RouteHandler) -> Self {
         Route::new(DELETE, path, handler)
+    }
+
+    /// [`Route::matches_path`] checks if the `request_path` matches this route's pattern and
+    /// extracts path parameters, and if so, returns [`Some`] [`HashMap`]. Defaults to [`None`].
+    /// # Example
+    /// [`Route::matches_path`] can be used to determine if a request path contains any matches
+    /// for a [`Route::request_pattern`]:
+    /// ```rust
+    /// use http::route::Route;
+    /// use std::collections::HashMap;
+    ///
+    /// fn check_endpoint_for_route_match(route: Route, endpoint: &str) -> bool {
+    ///     route.matches_path(endpoint).is_some()
+    /// }
+    /// ```
+    pub fn matches_path(&self, request_path: &str) -> Option<HashMap<String, String>> {
+        let pattern_segments: Vec<&str> = self.request_pattern.split('/').collect();
+        let request_segments: Vec<&str> = request_path.split('/').collect();
+
+        // must have the same number of path segments
+        if pattern_segments.len() != request_segments.len() {
+            return None;
+        }
+
+        let mut path_params = HashMap::new();
+
+        // iterate through segments, comparing static parts and extracting dynamic ones
+        for i in 0..pattern_segments.len() {
+            let pattern_segment = pattern_segments[i];
+            let request_segment = request_segments[i];
+
+            if pattern_segment.starts_with('{') && pattern_segment.ends_with('}') {
+                // this is a path parameter (e.g., "{id}")
+                let param_name = &pattern_segment[1..pattern_segment.len() - 1]; // Extract "id"
+                path_params.insert(param_name.to_string(), request_segment.to_string());
+            } else if pattern_segment != request_segment {
+                // static segment mismatch (e.g., "/get/" vs "/post/")
+                return None;
+            }
+        }
+
+        Some(path_params)
     }
 
     /// [`Route::new`] creates a new [`Route`] for any `http_method`, which uses the

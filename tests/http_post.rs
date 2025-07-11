@@ -1,5 +1,6 @@
 use http::{request::Request, response::Response};
 use http_attributes::{http_post, http_raw_post};
+use std::collections::HashMap;
 
 // ==================
 // common test values
@@ -31,8 +32,12 @@ fn http_post_request_pattern_should_return_expected_endpoint() {
 #[test]
 fn http_post_handler_should_return_expected_response() {
     let expected = Response::ok(TEST_POST_BODY_CONTENT, false);
-    let mut request = Request::new(TEST_POST_ENDPOINT, http::methods::POST);
-    request.body_content = Some(TEST_POST_BODY_CONTENT.to_string());
+    let request = Request::new(
+        TEST_POST_ENDPOINT,
+        http::methods::POST,
+        Some(TEST_POST_BODY_CONTENT.to_string()),
+        HashMap::new(),
+    );
 
     let result = (test_post().handler)(request);
 
@@ -50,8 +55,12 @@ fn http_raw_post_request_pattern_should_return_expected_endpoint() {
 #[test]
 fn http_raw_post_handler_should_return_expected_raw_response() {
     let expected = Response::ok(TEST_POST_BODY_CONTENT, true);
-    let mut request = Request::new(TEST_POST_ENDPOINT, http::methods::POST);
-    request.body_content = Some(TEST_POST_BODY_CONTENT.to_string());
+    let request = Request::new(
+        TEST_POST_ENDPOINT,
+        http::methods::POST,
+        Some(TEST_POST_BODY_CONTENT.to_string()),
+        HashMap::new(),
+    );
 
     let result = (test_raw_post().handler)(request);
 

@@ -13,16 +13,11 @@ use std::{
     sync::OnceLock,
 };
 
-/// [`ENDPOINTS`] is a `static` [`HashMap`] with path keys and [`Route`] values
-/// that is initialized once in a thread-safe manner.
-static ENDPOINTS: OnceLock<HashMap<String, Route>> = OnceLock::new();
-fn get_endpoints() -> &'static HashMap<String, Route> {
-    ENDPOINTS.get_or_init(|| {
-        crate::routes::index::get_endpoints()
-            .into_iter()
-            .map(|r| (r.request_pattern.to_string(), r))
-            .collect()
-    })
+/// [`ENDPOINTS`] is a `static` [`Vec`] of [`Route`] values that is initialized once
+/// in a thread-safe manner.
+static ENDPOINTS: OnceLock<Vec<Route>> = OnceLock::new();
+fn get_endpoints() -> &'static Vec<Route> {
+    ENDPOINTS.get_or_init(crate::routes::index::get_endpoints)
 }
 
 /// [`listen`] will listen for requests to the server and dispatch responses in
@@ -54,12 +49,12 @@ pub fn listen() {
 }
 
 /// [`handle_connection`] will respond to a server request by matching the request
-/// from the provided [`TcpStream`] to a "path key" in the provided [`HashMap`].
-fn handle_connection(mut stream: TcpStream, all_routes_map: &HashMap<String, Route>) {
+/// from the provided [`TcpStream`] to a [`Route`] in the provided [`Vec`].
+fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
     let mut buf_reader = BufReader::new(&stream);
     let mut request_line_str = String::new();
 
-    // read the first line of the request (e.g., "GET /squared?number=10 HTTP/1.1")
+    // read the first line of the request (e.g., "GET /get/person/123?name=Alice HTTP/1.1")
     if buf_reader.read_line(&mut request_line_str).is_err() || request_line_str.trim().is_empty() {
         stream
             .write_all(Response::bad_request().to_string().as_bytes())
@@ -78,11 +73,11 @@ fn handle_connection(mut stream: TcpStream, all_routes_map: &HashMap<String, Rou
     }
 
     let method = parts[0].to_string(); // e.g., "GET"
-    let full_path_with_query = parts[1].to_string(); // e.g., "/squared?number=10"
-    let _http_version = parts[2]; // e.g., "HTTP/1.1"
+    let full_path_with_query = parts[1].to_string(); // e.g., "/get/person/123?name=Alice"
+    let _http_version = parts[2];
 
-    // extract base path for HashMap lookup (e.g., "/squared")
-    let path_for_lookup = full_path_with_query
+    // extract base path for matching (without query string)
+    let path_to_match = full_path_with_query
         .split('?')
         .next()
         .unwrap_or(&full_path_with_query)
@@ -91,7 +86,7 @@ fn handle_connection(mut stream: TcpStream, all_routes_map: &HashMap<String, Rou
     // read headers and body
     let mut headers = HashMap::new();
     let mut content_length: usize = 0;
-    let mut current_line: String = String::new();
+    let mut current_line = String::new();
     while buf_reader.read_line(&mut current_line).is_ok() && current_line.trim() != "" {
         if let Some((key, value)) = current_line.split_once(':') {
             headers.insert(key.trim().to_lowercase(), value.trim().to_string());
@@ -110,27 +105,32 @@ fn handle_connection(mut stream: TcpStream, all_routes_map: &HashMap<String, Rou
         }
     }
 
-    // this `Request` object is what gets passed to your route handlers.
-    let incoming_request = Request {
-        path: full_path_with_query,
-        method: method.clone(),
-        body_content: if body_content.is_empty() {
-            None
-        } else {
-            Some(body_content)
-        },
-    };
+    // iterate through ALL registered routes to find a match
+    let mut final_response: Response = Response::not_found();
+    for route in all_routes_vec {
+        // first, check if the HTTP method matches
+        if route.method == method {
+            // then, try to match the path pattern and extract parameters
+            if let Some(path_params) = route.matches_path(&path_to_match) {
+                // found a matching route pattern!
+                let incoming_request = Request {
+                    path: full_path_with_query,
+                    method: method.clone(),
+                    body_content: if body_content.is_empty() {
+                        None
+                    } else {
+                        Some(body_content)
+                    },
+                    path_params,
+                };
 
-    // route matching and handler invocation
-    let final_response = if let Some(route) = all_routes_map.get(&path_for_lookup) {
-        // route found - call its handler closure with the incoming_request
-        (route.handler)(incoming_request)
-    } else {
-        // no route matched
-        Response::not_found()
-    };
+                final_response = (route.handler)(incoming_request); // Call the dynamic handler
+                break;
+            }
+        }
+    }
 
-    // send response back
+    // send back response to the stream
     stream
         .write_all(final_response.to_string().as_bytes())
         .unwrap();

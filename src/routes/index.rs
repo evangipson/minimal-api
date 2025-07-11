@@ -21,9 +21,19 @@ pub fn show_crate_version() -> String {
 }
 
 #[http_get("/squared")]
-pub fn show_number_squared(number: i32) -> String {
-    let squared_number = number * number;
-    format!("{number} squared is {squared_number}.").get_json()
+pub fn show_number_squared(number: String) -> String {
+    if number.parse::<i32>().is_ok() {
+        let parsed_number: i32 = number.parse().unwrap();
+        let squared_number = parsed_number * parsed_number;
+        format!("{parsed_number} squared is {squared_number}.").get_json()
+    } else {
+        format!("{number} is not a number.").get_json()
+    }
+}
+
+#[http_get("/user/{id}")]
+pub fn show_user_by_id(id: String) -> String {
+    format!("Found user by id '{id}'").get_json()
 }
 
 #[http_post("/sendname")]
@@ -47,6 +57,7 @@ pub fn get_endpoints() -> Vec<Route> {
         show_crate_name(),
         show_crate_version(),
         show_number_squared(),
+        show_user_by_id(),
         get_name(),
         get_update_id(),
         get_delete_id(),

@@ -25,10 +25,10 @@ pub struct Response {
 }
 
 impl Response {
-    /// [`Response::ok`] represents a [`Response`] with [`Status::OK`].
+    /// [`Response::ok`] represents a [`Response`] with [`Status::Ok`].
     /// # Example
     /// [`Response::ok`] can be used to create a [`Response`] that returns a
-    /// simple [`String`] with [`Status::OK`]:
+    /// simple [`String`] with [`Status::Ok`]:
     /// ```rust
     /// use http::response::Response;
     ///

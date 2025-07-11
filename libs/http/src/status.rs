@@ -19,8 +19,6 @@ pub enum Status {
 
 /// Implement [`std::fmt::Display`] for [`Status`].
 impl std::fmt::Display for Status {
-    /// [`Status::fmt`] will [`write!`] a [`String`] representation of the
-    /// [`Status`] that invokes it.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let status = match self {
             Status::Ok => "200 OK",

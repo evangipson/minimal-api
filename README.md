@@ -4,13 +4,8 @@ A thread-safe minimal API written in rust that serves JSON for HTTP requests.
 Minimal API currently supports:
 - Thread-safe workers to listen for requests, and serve out responses
 - `GET`, `POST`, `PUT`, and `DELETE` HTTP requests
-- Query string keys and body content as function parameters
+- Query string keys, body content, and dynamic path segments as function parameters
 - [A series of more complex routes](src/routes/mock/) to represent more realistic, complex scenarios
-
-## TODO:
-- [ ] Guard query string parameter (and body content) input casting with some sort of validation in the attributes library
-- [ ] Introduce dynamic routes, e.g.: /get/person/{id}
-- [ ] Write unit tests for core functionality
 
 ## Getting Started
 1. Download the repo
@@ -22,11 +17,11 @@ Minimal API currently supports:
     - Check the [server config file](.cargo/) of the environment you chose for the address
     - By default, there are index ("/"), "/name", and "/version" endpoints
 
-## Example routes
+## Examples
+### Basic `GET`
 The following example sets up a `GET` endpoint for the index route (`/`) that returns "Hello!":
 ```rust
 use http_attributes::http_get;
-use http::route::Route;
 
 #[http_get("/")]
 pub fn say_hello() -> String {
@@ -34,10 +29,10 @@ pub fn say_hello() -> String {
 }
 ```
 
+### `GET` with query parameters
 The following example sets up a `GET` endpoint for the `/who` path that returns a message with the value of the `name` query parameter:
 ```rust
 use http_attributes::http_get;
-use http::route::Route;
 
 #[http_get("/who")]
 pub fn say_hello(name: String) -> String {
@@ -45,10 +40,21 @@ pub fn say_hello(name: String) -> String {
 }
 ```
 
+### `GET` with dynamic path segments
+The following example sets up a `GET` endpoint for the `/user` path that returns a message with the value of the `id` path segment:
+```rust
+use http_attributes::http_get;
+
+#[http_get("/user/{id}")]
+pub fn get_user(id: String) -> String {
+    format!("Found user by id '{id}'!")
+}
+```
+
+### Basic `POST`
 The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST` data:
 ```rust
 use http_attributes::http_post;
-use http::route::Route;
 
 #[http_post("/submit")]
 pub fn get_post_data(content: String) -> String {
@@ -56,10 +62,10 @@ pub fn get_post_data(content: String) -> String {
 }
 ```
 
+### Basic `PUT`
 The following example sets up a `PUT` endpoint for the `/update` path that returns the `PUT` data:
 ```rust
 use http_attributes::http_put;
-use http::route::Route;
 
 #[http_put("/update")]
 pub fn get_put_data(content: String) -> String {
@@ -67,10 +73,10 @@ pub fn get_put_data(content: String) -> String {
 }
 ```
 
+### Basic `DELETE`
 The following example sets up a `DELETE` endpoint for the `/remove` path that returns a query parameter value sent to the `DELETE` route:
 ```rust
 use http_attributes::http_delete;
-use http::route::Route;
 
 #[http_delete("/remove")]
 pub fn get_delete_id(id: String) -> String {
@@ -89,3 +95,6 @@ pub fn get_delete_id(id: String) -> String {
 ## Environment Configuration
 - Modify the [`./cargo/config.toml`](.cargo/config.toml) file to change the ip address or port for local development.
 - Modify the [`./cargo/config.docker.toml`](.cargo/config.docker.toml) and [`./compose.yml`](compose.yml) files to change the ip address or port for docker development.
+
+## TODO:
+- [ ] Guard query string parameter (and body content) input casting with some sort of validation in the attributes library

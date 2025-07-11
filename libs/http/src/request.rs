@@ -2,6 +2,7 @@ use crate::{
     constants::HTTP_VERSION,
     methods::{DELETE, GET, POST, PUT},
 };
+use std::collections::HashMap;
 
 /// [`Request`] represents a web request.
 #[derive(PartialEq)]
@@ -22,6 +23,8 @@ pub struct Request {
     pub method: String,
     /// [`Request::body_content`] is an optional [`String`] representation of any body content sent as part of a [`Request`].
     pub body_content: Option<String>,
+    /// [`Request::path_params`] is a collection of parameters that are in [`Request::path`].
+    pub path_params: HashMap<String, String>,
 }
 
 impl Request {
@@ -32,14 +35,20 @@ impl Request {
     /// use http::request::Request;
     ///
     /// fn create_get_request(path: &str) -> Request {
-    ///     http::request::Request::new(path, "GET")
+    ///     http::request::Request::new(path, "GET", None, HashMap::new())
     /// }
     /// ```
-    pub fn new(path: &str, method: &str) -> Self {
-        Request {
+    pub fn new(
+        path: &str,
+        method: &str,
+        body_content: Option<String>,
+        path_params: HashMap<String, String>,
+    ) -> Self {
+        Self {
             path: path.to_string(),
             method: method.to_string(),
-            body_content: None,
+            body_content,
+            path_params,
         }
     }
 

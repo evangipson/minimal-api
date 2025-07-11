@@ -16,7 +16,6 @@
 //! returns "Hello!":
 //! ```rust
 //! use http_attributes::http_get;
-//! use http::route::Route;
 //!
 //! #[http_get("/")]
 //! pub fn say_hello() -> String {
@@ -28,7 +27,6 @@
 //! a message with the value of the `name` query parameter:
 //! ```rust
 //! use http_attributes::http_get;
-//! use http::route::Route;
 //!
 //! #[http_get("/who")]
 //! pub fn say_hello(name: String) -> String {
@@ -36,10 +34,19 @@
 //! }
 //! ```
 //!
+//! The following example sets up a `GET` endpoint for the `/user` path that returns a message with the value of the `id` path segment:
+//! ```rust
+//! use http_attributes::http_get;
+//!
+//! #[http_get("/user/{id}")]
+//! pub fn get_user(id: String) -> String {
+//!     format!("Found user by id '{id}'!")
+//! }
+//! ```
+//!
 //! The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST` data:
 //! ```rust
 //! use http_attributes::http_post;
-//! use http::route::Route;
 //!
 //! #[http_post("/submit")]
 //! pub fn get_post_data(content: String) -> String {
@@ -50,7 +57,6 @@
 //! The following example sets up a `PUT` endpoint for the `/update` path that returns the `PUT` data:
 //! ```rust
 //! use http_attributes::http_put;
-//! use http::route::Route;
 //!
 //! #[http_put("/update")]
 //! pub fn get_put_data(content: String) -> String {
@@ -62,7 +68,6 @@
 //! parameter value sent to the `DELETE` route:
 //! ```rust
 //! use http_attributes::http_delete;
-//! use http::route::Route;
 //!
 //! #[http_delete("/remove")]
 //! pub fn get_delete_id(id: String) -> String {
