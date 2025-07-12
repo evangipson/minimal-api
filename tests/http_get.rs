@@ -38,6 +38,11 @@ fn test_raw_get_query(id: String) -> String {
     id.to_string()
 }
 
+#[http_raw_get("get/test/{id}")]
+fn test_raw_get_dynamic(id: String) -> String {
+    id.to_string()
+}
+
 // ==============
 // http_get tests
 // ==============
@@ -69,10 +74,9 @@ fn http_get_handler_should_return_expected_request_query() {
 
 #[test]
 fn http_get_handler_should_return_expected_dynamic_path_value() {
-    let get_path = &format!("{TEST_GET_ENDPOINT}/{TEST_GET_ID}");
     let expected = Response::ok(TEST_GET_ID, false);
     let request = Request::new(
-        get_path,
+        TEST_GET_ENDPOINT,
         http::methods::GET,
         None,
         HashMap::from([("id".to_string(), TEST_GET_ID.to_string())]),
@@ -108,6 +112,21 @@ fn http_raw_get_handler_should_return_expected_request_query() {
     let request = Request::new(get_path, http::methods::GET, None, HashMap::new());
 
     let result = (test_raw_get_query().handler)(request);
+
+    assert_eq!(expected, result);
+}
+
+#[test]
+fn http_raw_get_handler_should_return_expected_dynamic_path_value() {
+    let expected = Response::ok(TEST_GET_ID, true);
+    let request = Request::new(
+        TEST_GET_ENDPOINT,
+        http::methods::GET,
+        None,
+        HashMap::from([("id".to_string(), TEST_GET_ID.to_string())]),
+    );
+
+    let result = (test_raw_get_dynamic().handler)(request);
 
     assert_eq!(expected, result);
 }

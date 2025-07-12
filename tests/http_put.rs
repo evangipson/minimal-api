@@ -7,6 +7,7 @@ use std::collections::HashMap;
 // ==================
 const TEST_PUT_ENDPOINT: &str = "put/test";
 const TEST_PUT_BODY_CONTENT: &str = "Hello!";
+const TEST_PUT_ID: &str = "PUT-ID";
 
 // =================
 // endpoints to test
@@ -16,9 +17,19 @@ fn test_put(content: String) -> String {
     content
 }
 
+#[http_put("put/test/{id}")]
+fn test_put_dynamic(content: String, id: String) -> String {
+    format!("{content} {id}")
+}
+
 #[http_raw_put("put/test")]
 fn test_raw_put(content: String) -> String {
     content
+}
+
+#[http_raw_put("put/test/{id}")]
+fn test_raw_put_dynamic(content: String, id: String) -> String {
+    format!("{content} {id}")
 }
 
 // ==============
@@ -44,6 +55,21 @@ fn http_put_handler_should_return_expected_request() {
     assert_eq!(expected, result);
 }
 
+#[test]
+fn http_put_handler_should_return_dynamic_route_value() {
+    let expected = Response::ok(&format!("{TEST_PUT_BODY_CONTENT} {TEST_PUT_ID}"), false);
+    let request = Request::new(
+        TEST_PUT_ENDPOINT,
+        http::methods::PUT,
+        Some(TEST_PUT_BODY_CONTENT.to_string()),
+        HashMap::from([("id".to_string(), TEST_PUT_ID.to_string())]),
+    );
+
+    let result = (test_put_dynamic().handler)(request);
+
+    assert_eq!(expected, result);
+}
+
 // ==================
 // http_raw_put tests
 // ==================
@@ -63,6 +89,21 @@ fn http_raw_put_handler_should_return_expected_raw_response() {
     );
 
     let result = (test_raw_put().handler)(request);
+
+    assert_eq!(expected, result);
+}
+
+#[test]
+fn http_raw_put_handler_should_return_dynamic_route_value() {
+    let expected = Response::ok(&format!("{TEST_PUT_BODY_CONTENT} {TEST_PUT_ID}"), true);
+    let request = Request::new(
+        TEST_PUT_ENDPOINT,
+        http::methods::PUT,
+        Some(TEST_PUT_BODY_CONTENT.to_string()),
+        HashMap::from([("id".to_string(), TEST_PUT_ID.to_string())]),
+    );
+
+    let result = (test_raw_put_dynamic().handler)(request);
 
     assert_eq!(expected, result);
 }
