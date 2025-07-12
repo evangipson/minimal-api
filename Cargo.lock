@@ -20,11 +20,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "logger"
+version = "0.0.1"
+
+[[package]]
 name = "minimal-api"
 version = "0.0.1"
 dependencies = [
  "http",
  "http_attributes",
+ "logger",
 ]
 
 [[package]]

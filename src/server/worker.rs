@@ -1,3 +1,5 @@
+use logger::{log_debug, log_error};
+
 use crate::server::job::Job;
 use std::{
     sync::{Arc, Mutex, mpsc},
@@ -40,11 +42,11 @@ impl Worker {
             loop {
                 match receiver.lock().unwrap().recv() {
                     Ok(job) => {
-                        println!("Worker {id} got a job; executing.");
+                        log_debug!("worker {id} got a job; executing.");
                         job();
                     }
                     Err(_) => {
-                        println!("Worker {id} disconnected; shutting down.");
+                        log_error!("worker {id} disconnected; shutting down.");
                         break;
                     }
                 }

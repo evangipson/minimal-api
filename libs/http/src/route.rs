@@ -1,10 +1,9 @@
-use std::collections::HashMap;
-
 use crate::{
     methods::{DELETE, GET, POST, PUT},
     request::Request,
     response::Response,
 };
+use std::collections::HashMap;
 
 /// [`RouteHandler`] is a dynamic handler function for a [`Route`],
 /// which takes a [`Request`] and gives back a [`Response`].
@@ -170,6 +169,24 @@ impl Route {
         }
 
         Some(path_params)
+    }
+
+    /// [`Route::get_response`] will get a [`Response`] based on the provided [`Request`].
+    /// # Example
+    /// [`Route::get_response`] can be used to get a [`Response`] for a [`Request`]:
+    /// ```rust
+    /// use http::{
+    ///     response::Response,
+    ///     request::Request,
+    ///     route::Route
+    /// };
+    ///
+    /// fn get_route_response(route: Route, request:Request) -> Response {
+    ///     route.get_response(request)
+    /// }
+    /// ```
+    pub fn get_response(&self, request: Request) -> Response {
+        (self.handler)(request)
     }
 
     /// [`Route::new`] creates a new [`Route`] for any `http_method`, which uses the

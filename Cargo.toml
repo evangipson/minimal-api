@@ -7,3 +7,4 @@ authors = ["Evan Gipson"]
 [dependencies]
 http = { path = "libs/http" }
 http_attributes = { path = "libs/http_attributes" }
+logger = { path = "libs/logger" }

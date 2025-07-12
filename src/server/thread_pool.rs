@@ -1,3 +1,5 @@
+use logger::log_debug;
+
 use crate::server::{job::Job, worker::Worker};
 use std::sync::{Arc, Mutex, mpsc};
 
@@ -75,7 +77,7 @@ impl Drop for ThreadPool {
         drop(self.sender.take());
 
         for worker in &mut self.workers {
-            println!("Shutting down worker {}", worker.id);
+            log_debug!("shutting down worker {}.", worker.id);
 
             if let Some(thread) = worker.thread.take() {
                 thread.join().unwrap();

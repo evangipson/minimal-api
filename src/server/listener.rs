@@ -6,6 +6,7 @@ use crate::{
     server::thread_pool::ThreadPool,
 };
 use http::{request::Request, response::Response, route::Route};
+use logger::{log_debug, log_info, log_warning};
 use std::{
     collections::HashMap,
     io::{BufReader, prelude::*},
@@ -36,7 +37,7 @@ pub fn listen() {
     let endpoints = get_endpoints();
     let pool = ThreadPool::new(4);
 
-    println!("{CRATE_NAME} v{CRATE_VERSION} listening on http://{server_address}");
+    log_info!("{CRATE_NAME} v{CRATE_VERSION} listening on http://{server_address}");
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
@@ -45,17 +46,20 @@ pub fn listen() {
         });
     }
 
-    println!("{CRATE_NAME} shutting down.");
+    log_info!("{CRATE_NAME} shutting down.");
 }
 
 /// [`handle_connection`] will respond to a server request by matching the request
 /// from the provided [`TcpStream`] to a [`Route`] in the provided [`Vec`].
 fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
+    log_debug!("handling server connection.");
+
     let mut buf_reader = BufReader::new(&stream);
     let mut request_line_str = String::new();
 
     // read the first line of the request (e.g., "GET /get/person/123?name=Alice HTTP/1.1")
     if buf_reader.read_line(&mut request_line_str).is_err() || request_line_str.trim().is_empty() {
+        log_warning!("can't read request, returning 400 BAD REQUEST.");
         stream
             .write_all(Response::bad_request().to_string().as_bytes())
             .unwrap();
@@ -66,6 +70,7 @@ fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
     let parts: Vec<&str> = request_line_str.splitn(3, ' ').collect();
 
     if parts.len() != 3 {
+        log_warning!("request is malformed, returning 400 BAD REQUEST.");
         stream
             .write_all(Response::bad_request().to_string().as_bytes())
             .unwrap();
@@ -108,25 +113,24 @@ fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
     // iterate through ALL registered routes to find a match
     let mut final_response: Response = Response::not_found();
     for route in all_routes_vec {
-        // first, check if the HTTP method matches
-        if route.method == method {
-            // then, try to match the path pattern and extract parameters
-            if let Some(path_params) = route.matches_path(&path_to_match) {
-                // found a matching route pattern!
-                let incoming_request = Request {
-                    path: full_path_with_query,
-                    method: method.clone(),
-                    body_content: if body_content.is_empty() {
-                        None
-                    } else {
-                        Some(body_content)
-                    },
-                    path_params,
-                };
+        if route.method == method
+            && let Some(path_params) = route.matches_path(&path_to_match)
+        {
+            log_info!("matched route {} {}", route.method, path_to_match);
+            let incoming_request = Request {
+                path: full_path_with_query,
+                method: method.clone(),
+                body_content: if body_content.is_empty() {
+                    None
+                } else {
+                    Some(body_content)
+                },
+                path_params,
+            };
 
-                final_response = (route.handler)(incoming_request); // Call the dynamic handler
-                break;
-            }
+            log_info!("getting response for {} {}", route.method, path_to_match);
+            final_response = route.get_response(incoming_request);
+            break;
         }
     }
 
