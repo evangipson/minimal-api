@@ -116,7 +116,6 @@ fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
         if route.method == method
             && let Some(path_params) = route.matches_path(&path_to_match)
         {
-            log_info!("matched route {} {}", route.method, path_to_match);
             let incoming_request = Request {
                 path: full_path_with_query,
                 method: method.clone(),
@@ -127,12 +126,13 @@ fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
                 },
                 path_params,
             };
-
-            log_info!("getting response for {} {}", route.method, path_to_match);
             final_response = route.get_response(incoming_request);
             break;
         }
     }
+
+    // log the routing result
+    log_info!("request: {} - {}", path_to_match, final_response.status);
 
     // send back response to the stream
     stream
