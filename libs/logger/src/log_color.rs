@@ -10,6 +10,7 @@ pub enum LogColor {
     Red,
     Yellow,
     White,
+    Grey,
 }
 
 impl ToString for LogColor {
@@ -24,6 +25,7 @@ impl ToString for LogColor {
             LogColor::Red => format!("{RESET_COLOR}[31m"),
             LogColor::BrightRed => format!("{RESET_COLOR}[31;1m"),
             LogColor::White => format!("{RESET_COLOR}[37;0m"),
+            LogColor::Grey => format!("{RESET_COLOR}[37;2m"),
         }
     }
 }

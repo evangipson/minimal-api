@@ -132,7 +132,12 @@ fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
     }
 
     // log the routing result
-    log_info!("request: {} - {}", path_to_match, final_response.status);
+    log_info!(
+        "{} {} -> {}",
+        method,
+        parts[1].to_string(),
+        final_response.status
+    );
 
     // send back response to the stream
     stream

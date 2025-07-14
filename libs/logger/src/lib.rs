@@ -14,9 +14,10 @@ pub fn set_logging_severity(severity: LogSeverity) -> bool {
 pub fn log(message: String, severity: &LogSeverity) {
     if severity >= get_logging_severity() {
         println!(
-            "{}{: <7}{} {message}",
+            "{}{: <7}{} {message}{}",
             severity.get_color().to_string(),
             "[".to_string() + &severity.to_string() + "]",
+            LogColor::Grey.to_string(),
             LogColor::White.to_string()
         );
     }
