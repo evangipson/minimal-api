@@ -50,7 +50,7 @@ fn http_put_handler_should_return_expected_request() {
         HashMap::new(),
     );
 
-    let result = (test_put().handler)(request);
+    let result = test_put().get_response(request);
 
     assert_eq!(expected, result);
 }
@@ -65,7 +65,7 @@ fn http_put_handler_should_return_dynamic_route_value() {
         HashMap::from([("id".to_string(), TEST_PUT_ID.to_string())]),
     );
 
-    let result = (test_put_dynamic().handler)(request);
+    let result = test_put_dynamic().get_response(request);
 
     assert_eq!(expected, result);
 }
@@ -88,7 +88,7 @@ fn http_raw_put_handler_should_return_expected_raw_response() {
         HashMap::new(),
     );
 
-    let result = (test_raw_put().handler)(request);
+    let result = test_raw_put().get_response(request);
 
     assert_eq!(expected, result);
 }
@@ -103,7 +103,7 @@ fn http_raw_put_handler_should_return_dynamic_route_value() {
         HashMap::from([("id".to_string(), TEST_PUT_ID.to_string())]),
     );
 
-    let result = (test_raw_put_dynamic().handler)(request);
+    let result = test_raw_put_dynamic().get_response(request);
 
     assert_eq!(expected, result);
 }

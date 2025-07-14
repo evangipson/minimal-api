@@ -46,7 +46,7 @@ fn http_delete_handler_should_return_expected_response() {
     let expected = Response::ok(TEST_DELETE_ID, false);
     let request = Request::new(delete_path, http::methods::DELETE, None, HashMap::new());
 
-    let result = (test_delete().handler)(request);
+    let result = test_delete().get_response(request);
 
     assert_eq!(expected, result);
 }
@@ -61,7 +61,7 @@ fn http_delete_handler_should_return_expected_dynamic_path_value() {
         HashMap::from([("id".to_string(), TEST_DELETE_ID.to_string())]),
     );
 
-    let result = (test_delete_dynamic().handler)(request);
+    let result = test_delete_dynamic().get_response(request);
 
     assert_eq!(expected, result);
 }
@@ -80,7 +80,7 @@ fn http_raw_delete_handler_should_return_expected_raw_response() {
     let expected = Response::ok(TEST_DELETE_ID, true);
     let request = Request::new(delete_path, http::methods::DELETE, None, HashMap::new());
 
-    let result = (test_raw_delete().handler)(request);
+    let result = test_raw_delete().get_response(request);
 
     assert_eq!(expected, result);
 }
@@ -95,7 +95,7 @@ fn http_raw_delete_handler_should_return_expected_dynamic_path_value() {
         HashMap::from([("id".to_string(), TEST_DELETE_ID.to_string())]),
     );
 
-    let result = (test_raw_delete_dynamic().handler)(request);
+    let result = test_raw_delete_dynamic().get_response(request);
 
     assert_eq!(expected, result);
 }

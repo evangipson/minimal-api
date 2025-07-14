@@ -50,7 +50,7 @@ fn http_post_handler_should_return_expected_response() {
         HashMap::new(),
     );
 
-    let result = (test_post().handler)(request);
+    let result = test_post().get_response(request);
 
     assert_eq!(expected, result);
 }
@@ -65,7 +65,7 @@ fn http_post_handler_should_return_body_and_dynamic_path_value() {
         HashMap::from([("id".to_string(), TEST_POST_ID.to_string())]),
     );
 
-    let result = (test_post_dynamic().handler)(request);
+    let result = test_post_dynamic().get_response(request);
 
     assert_eq!(expected, result);
 }
@@ -88,7 +88,7 @@ fn http_raw_post_handler_should_return_expected_raw_response() {
         HashMap::new(),
     );
 
-    let result = (test_raw_post().handler)(request);
+    let result = test_raw_post().get_response(request);
 
     assert_eq!(expected, result);
 }
@@ -103,7 +103,7 @@ fn http_raw_post_handler_should_return_body_and_dynamic_path_value() {
         HashMap::from([("id".to_string(), TEST_POST_ID.to_string())]),
     );
 
-    let result = (test_raw_post_dynamic().handler)(request);
+    let result = test_raw_post_dynamic().get_response(request);
 
     assert_eq!(expected, result);
 }
