@@ -32,12 +32,15 @@ fn get_endpoints() -> &'static Vec<Route> {
 /// }
 /// ```
 pub fn listen() {
-    let server_address = ServerConfig::new().get_server_address();
-    let listener = TcpListener::bind(&server_address).unwrap();
+    let server_config = ServerConfig::new();
+    let listener = TcpListener::bind(server_config.get_server_address()).unwrap();
     let endpoints = get_endpoints();
-    let pool = ThreadPool::new(4);
+    let pool = ThreadPool::new(server_config.workers);
 
-    log_info!("{CRATE_NAME} v{CRATE_VERSION} listening on http://{server_address}");
+    log_info!(
+        "{CRATE_NAME} v{CRATE_VERSION} listening on http://{}",
+        server_config.get_server_address()
+    );
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
@@ -50,8 +53,8 @@ pub fn listen() {
 }
 
 /// [`handle_connection`] will respond to a server request by matching the request
-/// from the provided [`TcpStream`] to a [`Route`] in the provided [`Vec`].
-fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
+/// from the provided [`TcpStream`] to a [`Route`] in the provided `all_routes_vec`.
+fn handle_connection(mut stream: TcpStream, all_routes_vec: &[Route]) {
     log_debug!("handling server connection.");
 
     let mut buf_reader = BufReader::new(&stream);
@@ -78,14 +81,14 @@ fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
     }
 
     let method = parts[0].to_string(); // e.g., "GET"
-    let full_path_with_query = parts[1].to_string(); // e.g., "/get/person/123?name=Alice"
+    let full_path_with_query = parts[1]; // e.g., "/get/person/123?name=Alice"
     let _http_version = parts[2];
 
     // extract base path for matching (without query string)
     let path_to_match = full_path_with_query
         .split('?')
         .next()
-        .unwrap_or(&full_path_with_query)
+        .unwrap_or(full_path_with_query)
         .to_string();
 
     // read headers and body
@@ -102,44 +105,46 @@ fn handle_connection(mut stream: TcpStream, all_routes_vec: &Vec<Route>) {
         current_line.clear();
     }
 
-    let mut body_content = String::new();
-    if content_length > 0 {
-        let mut body_bytes = vec![0; content_length];
-        if buf_reader.read_exact(&mut body_bytes).is_ok() {
-            body_content = String::from_utf8_lossy(&body_bytes).to_string();
-        }
-    }
+    let mut body_bytes = vec![0; content_length];
+    let body_content = if content_length > 0 && buf_reader.read_exact(&mut body_bytes).is_ok() {
+        Some(String::from_utf8_lossy(&body_bytes).to_string())
+    } else {
+        None
+    };
 
     // iterate through ALL registered routes to find a match
-    let mut final_response: Response = Response::not_found();
-    for route in all_routes_vec {
-        if route.method == method
-            && let Some(path_params) = route.matches_path(&path_to_match)
-        {
+    let matched_response = all_routes_vec
+        .iter()
+        .filter(|&route| route.method == method)
+        .filter(|&route| route.matches_path(&path_to_match).is_some())
+        .take(1)
+        .next()
+        .map(|route| {
             let incoming_request = Request {
-                path: full_path_with_query,
+                path: full_path_with_query.to_string(),
                 method: method.clone(),
-                body_content: if body_content.is_empty() {
-                    None
-                } else {
-                    Some(body_content)
-                },
-                path_params,
+                body_content: body_content.clone(),
+                path_params: route.matches_path(&path_to_match).unwrap(),
             };
-            final_response = route.get_response(incoming_request);
-            break;
-        }
+            route.get_response(incoming_request)
+        });
+
+    if matched_response.is_none() {
+        log_warning!("request did not match any existing routes, returning 404 NOT FOUND");
+        stream
+            .write_all(Response::not_found().to_string().as_bytes())
+            .unwrap();
+        return;
     }
 
-    // log the routing result
+    // log the routing result and send it back to the stream
+    let final_response = matched_response.unwrap();
     log_info!(
         "{} {} -> {}",
         method,
         parts[1].to_string(),
         final_response.status
     );
-
-    // send back response to the stream
     stream
         .write_all(final_response.to_string().as_bytes())
         .unwrap();
