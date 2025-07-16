@@ -1,5 +1,6 @@
 pub const RESET_COLOR: &str = "\x1b";
 
+/// [`LogColor`] represents colors that log messages can use.
 pub enum LogColor {
     BrightBlue,
     BrightGreen,
@@ -13,6 +14,7 @@ pub enum LogColor {
     Grey,
 }
 
+/// Implement [`ToString`] for [`LogColor`].
 impl ToString for LogColor {
     fn to_string(&self) -> String {
         match self {

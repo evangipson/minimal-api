@@ -10,6 +10,8 @@
 //!   [`http_get`](macro@http_attributes::http_get) and
 //!   [`http_post`](macro@http_attributes::http_post), to facilitate creating
 //!   routes.
+//! - [`logger`] for helpful logging macros, such as
+//!   [`log_info`](macro@logger::log_info) and [`log_error`](macro@logger::log_error).
 //!
 //! # Creating routes
 //! The following example sets up an endpoint at the index route (`/`) that
@@ -34,7 +36,8 @@
 //! }
 //! ```
 //!
-//! The following example sets up a `GET` endpoint for the `/user` path that returns a message with the value of the `id` path segment:
+//! The following example sets up a `GET` endpoint for the `/user` path that
+//! returns a message with the value of the `id` path segment:
 //! ```rust
 //! use http_attributes::http_get;
 //!
@@ -44,7 +47,8 @@
 //! }
 //! ```
 //!
-//! The following example sets up a `POST` endpoint for the `/submit` path that returns the `POST` data:
+//! The following example sets up a `POST` endpoint for the `/submit` path that
+//! returns the `POST` data:
 //! ```rust
 //! use http_attributes::http_post;
 //!
@@ -54,7 +58,8 @@
 //! }
 //! ```
 //!
-//! The following example sets up a `PUT` endpoint for the `/update` path that returns the `PUT` data:
+//! The following example sets up a `PUT` endpoint for the `/update` path that
+//! returns the `PUT` data:
 //! ```rust
 //! use http_attributes::http_put;
 //!
@@ -64,7 +69,8 @@
 //! }
 //! ```
 //!
-//! The following example sets up a `DELETE` endpoint for the `/remove` path that returns a query
+//! The following example sets up a `DELETE` endpoint for the `/remove` path
+//! that returns a query
 //! parameter value sent to the `DELETE` route:
 //! ```rust
 //! use http_attributes::http_delete;

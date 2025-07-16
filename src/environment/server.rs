@@ -11,8 +11,9 @@ pub struct ServerConfig {
     /// directory.
     pub port: String,
     /// [`ServerConfig::workers`] is the number of workers that the server has to
-    /// handle requests, which essentially are individual threads dedicated to the
-    /// server.
+    /// handle requests (essentially individual threads dedicated to the server),
+    /// which is set by the `WORKERS` value in the config files in the `.cargo`
+    /// directory.
     pub workers: usize,
 }
 

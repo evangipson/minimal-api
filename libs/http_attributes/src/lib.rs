@@ -48,7 +48,8 @@ a simple [`String`]:
 ```rust
 use http_attributes::http_get;
 
-// this route listens for a GET request on the "/" path, and returns "hello".
+// this route listens for a GET request on the "/" path, and
+// returns "hello".
 #[http_get("/")]
 fn some_request() -> String {
     "hello".to_string()
@@ -61,8 +62,8 @@ and perform actions on them before returning a [`String`] result:
 ```rust
 use http_attributes::http_get;
 
-// this will listen for a "number" query parameter, such as "/squared?number=2",
-// which would return "4".
+// this will listen for a "number" query parameter, such as
+// "/squared?number=2", which would return "4".
 #[http_get("/squared")]
 fn get_squared_query_parameter(number: i32) -> String {
     let squared_result = number * number;
@@ -98,7 +99,8 @@ a simple [`String`]:
 ```rust
 use http_attributes::http_raw_get;
 
-// this route listens for a GET request on the "/" path, and returns "hello".
+// this route listens for a GET request on the "/" path, and
+// returns "hello".
 #[http_raw_get("/")]
 fn some_request() -> String {
     "hello".to_string()
@@ -111,8 +113,8 @@ and perform actions on them before returning a [`String`] result:
 ```rust
 use http_attributes::http_raw_get;
 
-// this will listen for a "number" query parameter, such as "/squared?number=2",
-// which would return "4".
+// this will listen for a "number" query parameter, such as
+// "/squared?number=2", which would return "4".
 #[http_raw_get("/squared")]
 fn get_squared_query_parameter(number: i32) -> String {
     let squared_result = number * number;
@@ -156,7 +158,8 @@ the content that was sent as the body of the `POST`:
 ```rust
 use http_attributes::http_post;
 
-// this route listens for a POST request on the "/" path, and returns the POST body.
+// this route listens for a POST request on the "/" path,
+// and returns the POST body.
 #[http_post("/")]
 fn some_request(content: String) -> String {
     format!("received {content} from POST!")
@@ -191,7 +194,8 @@ the content that was sent as the body of the `POST`:
 ```rust
 use http_attributes::http_raw_post;
 
-// this route listens for a POST request on the "/" path, and returns the POST body.
+// this route listens for a POST request on the "/" path, and
+// returns the POST body.
 #[http_raw_post("/")]
 fn some_request(content: String) -> String {
     format!("received {content} from POST!")
@@ -234,7 +238,8 @@ the content that was sent as the body of the `PUT`:
 ```rust
 use http_attributes::http_put;
 
-// this route listens for a PUT request on the "/" path, and returns the PUT content.
+// this route listens for a PUT request on the "/" path, and
+// returns the PUT content.
 #[http_put("/")]
 fn some_request(content: String) -> String {
     format!("received {content} from PUT!")
@@ -269,7 +274,8 @@ the content that was sent as the body of the `PUT`:
 ```rust
 use http_attributes::http_raw_put;
 
-// this route listens for a PUT request on the "/" path, and returns the PUT content.
+// this route listens for a PUT request on the "/" path, and
+// returns the PUT content.
 #[http_raw_put("/")]
 fn some_request(content: String) -> String {
     format!("received {content} from PUT!")
@@ -312,7 +318,8 @@ returns a query parameter value that denotes what to `DELETE`:
 ```rust
 use http_attributes::http_delete;
 
-// this route listens for a DELETE request on the "/remove" path, with "id" as a query parameter.
+// this route listens for a DELETE request on the "/remove"
+// path, with "id" as a query parameter.
 #[http_delete("/remove")]
 fn some_request(id: String) -> String {
     format!("received {id} from DELETE!")
@@ -347,7 +354,8 @@ returns a query parameter value that denotes what to `DELETE`:
 ```rust
 use http_attributes::http_raw_delete;
 
-// this route listens for a DELETE request on the "/remove" path, with "id" as a query parameter.
+// this route listens for a DELETE request on the "/remove"
+// path, with "id" as a query parameter.
 #[http_raw_delete("/remove")]
 fn some_request(id: String) -> String {
     format!("received {id} from DELETE!")
