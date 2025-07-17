@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use http::request::Request;
+use std::collections::HashMap;
 
 #[test]
 fn new_request_should_assign_inputs_as_members() {

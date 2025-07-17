@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use http::{request::Request, response::Response};
 use http_attributes::{http_delete, http_raw_delete};
+use std::collections::HashMap;
 
 // ==================
 // common test values
