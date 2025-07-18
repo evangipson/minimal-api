@@ -1,6 +1,7 @@
 use http::respond::Respond;
 use std::collections::HashMap;
 
+/// [`BaseMockResponse`] represents a response to a mock application.
 pub struct BaseMockResponse {
     pub is_success: bool,
     pub message_type: String,
@@ -13,6 +14,8 @@ pub struct BaseMockResponse {
     pub reason_code: u8,
 }
 
+/// [`DEFAULT_RESPONSE`] is a `const` [`BaseMockResponse`] instantiation
+/// filled with some default values to send back to an application.
 pub const DEFAULT_RESPONSE: BaseMockResponse = BaseMockResponse {
     is_success: true,
     message_type: String::new(),
@@ -26,6 +29,21 @@ pub const DEFAULT_RESPONSE: BaseMockResponse = BaseMockResponse {
 };
 
 impl BaseMockResponse {
+    /// [`BaseMockResponse::get_default_response`] returns a [`HashMap`] with [`str`]
+    /// keys and values that implement the [`Respond`] trait.
+    ///
+    /// # Example
+    /// [`BaseMockResponse::get_default_response`] can be used to build a response
+    /// containing many types of values to send back to an application:
+    /// ```rust
+    /// use http::respond::Respond;
+    /// use minimal_api::routes::mock::base_response::BaseMockResponse;
+    /// use std::collections::HashMap;
+    ///
+    /// fn get_application_response() -> HashMap<&'static str, Box<dyn Respond>> {
+    ///     BaseMockResponse::get_default_response()
+    /// }
+    /// ```
     pub fn get_default_response() -> HashMap<&'static str, Box<dyn Respond>> {
         HashMap::from([
             (

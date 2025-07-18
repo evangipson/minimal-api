@@ -1,6 +1,5 @@
-use logger::{log_debug, log_error};
-
 use crate::server::job::Job;
+use logger::{log_debug, log_error};
 use std::{
     sync::{Arc, Mutex, mpsc},
     thread,

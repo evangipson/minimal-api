@@ -18,6 +18,18 @@ pub struct ServerConfig {
 }
 
 impl ServerConfig {
+    /// [`ServerConfig::new`] will create a [`ServerConfig`] which reads values from
+    /// the configuration files in the `.cargo` directory.
+    ///
+    /// # Example
+    /// [`ServerConfig::new`] can be used to create a new [`ServerConfig`]:
+    /// ```rust
+    /// use minimal_api::environment::server::ServerConfig;
+    ///
+    /// fn create_server_config() -> ServerConfig {
+    ///     ServerConfig::new()
+    /// }
+    /// ```
     pub fn new() -> Self {
         let ip_address = env!("IP_ADDR").to_string();
         let port = env!("PORT").to_string();
@@ -40,11 +52,24 @@ impl ServerConfig {
         }
     }
 
+    /// [`ServerConfig::get_server_address`] will get [`ServerConfig::ip_address`] and
+    /// [`ServerConfig::port`], formatted with a colon between them.
+    ///
+    /// # Example
+    /// [`ServerConfig::get_server_address`] can be used to get a [`ServerConfig`] address:
+    /// ```rust
+    /// use minimal_api::environment::server::ServerConfig;
+    ///
+    /// fn get_address(server_config: ServerConfig) -> String {
+    ///     server_config.get_server_address()
+    /// }
+    /// ```
     pub fn get_server_address(&self) -> String {
         format!("{}:{}", self.ip_address, self.port)
     }
 }
 
+/// Implement [`Default`] for [`ServerConfig`].
 impl Default for ServerConfig {
     fn default() -> Self {
         ServerConfig::new()

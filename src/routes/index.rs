@@ -51,6 +51,8 @@ pub fn get_delete_id(id: String) -> String {
     format!("Received id '{id}' from DELETE route!").get_json()
 }
 
+/// [`get_endpoints`] will return a collection of [`Route`] for the
+/// server to listen for and respond to.
 pub fn get_endpoints() -> Vec<Route> {
     vec![
         show_welcome_message(),

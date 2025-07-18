@@ -1,6 +1,5 @@
-use logger::log_debug;
-
 use crate::server::{job::Job, worker::Worker};
+use logger::log_debug;
 use std::sync::{Arc, Mutex, mpsc};
 
 /// [`ThreadPool`] orchestrates one or many [`Worker`] to a [`Job`].
